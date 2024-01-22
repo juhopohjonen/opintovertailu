@@ -136,7 +136,7 @@ export default function SearchAppBar() {
                   placeholder="Hae oppilaitoksia"
                   value={searchBarValue}
                   onChange={(e) => setBarValue(e.target.value)}
-                  inputProps={{ 'aria-label': 'search' }}
+                  inputProps={{ 'aria-label': 'search', minLength: 3 }}
                 />
             </Search>
           </form>

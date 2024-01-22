@@ -1,4 +1,4 @@
-import { Box, Button, Icon, LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Pagination, Paper, Stack, Tab, Tabs, TextField, Typography } from "@mui/material"
+import { Box, Button, FormControl, Icon, InputLabel, LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Pagination, Paper, Select, Stack, Tab, Tabs, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 
 // experimental libraries
@@ -9,7 +9,6 @@ import TabPanel from "@mui/lab/TabPanel"
 import axios from "axios"
 import { Link, useSearchParams } from "react-router-dom"
 
-import SchoolIcon from '@mui/icons-material/School';
 
 const API_URI = 'https://opintopolku.fi/konfo-backend/external/search/toteutukset-koulutuksittain'
 
@@ -71,7 +70,18 @@ const SearchForm = ({ educationType }) => {
         ? canBeConvertedToNum(sParams.get('sivu'))
         : 1
 
+    const order = 
+        sParams.get('order') && (sParams.get('order') == 'asc' || sParams.get('order') == 'desc')
+            ? sParams.get('order')
+            : 'desc'
+
+        console.log('order', order)
+
     console.log('page', page)
+
+    const setOrder = (target) => {
+        setSParams({...sParams, order: target })
+    }
     
     const pageChange = (e, value) => {
         if (sParams.get('tab')) {
@@ -82,18 +92,20 @@ const SearchForm = ({ educationType }) => {
     }
 
     useEffect(() => {
+        console.log('in effect... with order', order)
         axios.get(API_URI, {
             params: {
                 koulutustyyppi: educationType,
-                page
+                page,
+                order: order
             }
         })
             .then(res => setResults(res.data))
             .catch(err => console.error('err!', err))
-    }, [page])
+    }, [sParams])
 
 
-    
+
 
 
     if (!results) {
@@ -122,20 +134,49 @@ const SearchResults = ({ hits }) => {
     )
 }
 
-const Result = ({ result }) => (
-    <ListItem disablePadding component={Link} to={`/opinnot/${result.oid}`}>
-        <ListItemButton>
-            <ListItemText
-                sx={{ color: 'text.primary' }}
-                primary={result.nimi.fi}
-                secondary={result.opintojenLaajuus ? `Opintojen laajuus ${result.opintojenLaajuusNumero} ${result.opintojenLaajuusyksikko.nimi.fi}` : null}
-            />
-        </ListItemButton>
-    </ListItem>
-)
+const Result = ({ result }) => {
+    
+    const getStudyPointsStr = () => {
+        if (result.opintojenLaajuusNumero && result.opintojenLaajuusyksikko.nimi.fi) {
+            return `${result.opintojenLaajuusNumero} ${result.opintojenLaajuusyksikko.nimi.fi}`
+        }
+
+        return null
+    }
+
+    return (
+        <ListItem disablePadding component={Link} to={`/opinnot/${result.oid}`}>
+            <ListItemButton>
+                <ListItemText
+                    sx={{ color: 'text.primary' }}
+                    primary={result.nimi.fi}
+                    secondary={getStudyPointsStr()}
+                />
+            </ListItemButton>
+        </ListItem>
+    )
+}
+
+const SelectOrder = ({ chosen, setChosen, sxRelay }) => {
+    return (
+        <FormControl fullWidth sx={sxRelay}>
+            <InputLabel id="select-order">Järjestys</InputLabel>
+            <Select
+                labelId="select-order"
+                value={chosen}
+                label="Järjestys"
+                onChange={(e) => setChosen(e.target.value)}
+            >
+                <MenuItem value='asc'>Nouseva (nimi)</MenuItem>
+                <MenuItem value='desc'>Laskeva (nimi)</MenuItem>   
+            </Select>
+        </FormControl>
+    )
+}
 
 
 export default Search
 export {
-    SearchResults
+    SearchResults,
+    canBeConvertedToNum,
 }
