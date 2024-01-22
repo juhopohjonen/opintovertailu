@@ -100,7 +100,7 @@ const TypeOfEducationList = ({ typeList }) => {
         <List>
             {typeList.map(type => (
                 <ListItem key={type.oid}>
-                    <ListItemButton>
+                    <ListItemButton component={Link} to={`/toteutukset/${type.oid}`}>
                         <ListItemText
                             sx={{ color: 'text.primary' }}
                             primary={type.nimi.fi}
@@ -128,7 +128,7 @@ const SchoolList = ({ education, headerComp }) => {
             }
             {tarjoajat.map(oppilaitos => (
                 <ListItem key={oppilaitos.nimi.fi}>
-                    <ListItemButton sx={{ ml: -2 }} component={Link} to={`/oppilaitokset/${oppilaitos.oid}`}>
+                    <ListItemButton sx={{ ml: -2 }}>
                         <ListItemIcon>
                             <SchoolRounded />
                         </ListItemIcon>
@@ -146,3 +146,6 @@ const SchoolList = ({ education, headerComp }) => {
 
 
 export default EducationView
+export {
+    EducationHeader
+}

@@ -7,21 +7,37 @@ import TabContext from "@mui/lab/TabContext"
 import TabList from "@mui/lab/TabList"
 import TabPanel from "@mui/lab/TabPanel"
 import axios from "axios"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 
 import SchoolIcon from '@mui/icons-material/School';
 
 const API_URI = 'https://opintopolku.fi/konfo-backend/external/search/toteutukset-koulutuksittain'
 
+const canBeConvertedToNum = (value) => {
+    try {
+        const number = Number(value)
+        console.log('num conversion ok!')
+        return number
+    } catch (e) {
+        console.log('number convertion failed', e)
+        return false
+    }
+}
+
 const Search = () => {
-    const [tabValue, setTab] = useState('yo')
+
+
+    const [sParams, setSParams] = useSearchParams()
+
+    const eduType = sParams.get('tab') || 'yo'
+
     const handleTabChange = (event, newValue) => {
-        setTab(newValue)
+        setSParams({ tab: newValue })
     }
 
     return (
-        <Paper elevation={3} component={Box} sx={{ p: 1, width: 750, maxWidth: '100%' }}>
-            <TabContext value={tabValue} sx={{ m: 0 }}>
+        <Paper elevation={3} component={Box} sx={{ p: 1, width: 750, maxWidth: '100%', mb: 5 }}>
+            <TabContext value={eduType} sx={{ m: 0 }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleTabChange} aria-label="Hakuvalikko">
                         <Tab label="Yliopisto" value="yo" />
@@ -47,11 +63,22 @@ const Search = () => {
 }
 
 const SearchForm = ({ educationType }) => {
+
     const [results, setResults] = useState(null)
-    const [page, setPage] = useState(1)
+    const [sParams, setSParams] = useSearchParams()
+
+    const page = sParams.get('sivu') && canBeConvertedToNum(sParams.get('sivu'))
+        ? canBeConvertedToNum(sParams.get('sivu'))
+        : 1
+
+    console.log('page', page)
     
     const pageChange = (e, value) => {
-        setPage(value)
+        if (sParams.get('tab')) {
+            setSParams({ tab: sParams.get('tab'), sivu: value })
+        } else {
+            setSParams({ sivu: value })
+        }
     }
 
     useEffect(() => {

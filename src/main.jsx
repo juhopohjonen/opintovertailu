@@ -6,6 +6,7 @@ import Index from './Sites/Index.jsx'
 import EducationView from './Sites/EducationView.jsx'
 import SchoolView from './Sites/SchoolView.jsx'
 import AvailableEducations from './Sites/AvailableEducations.jsx'
+import ToteutusView from './Sites/ToteutusView.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -22,6 +23,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path='oppilaitokset'>
             <Route index element={<p>oppilaitokset</p>} />
             <Route path=':id' element={<SchoolView />} />
+          </Route>
+
+          <Route path='toteutukset'>
+            <Route path=':id' element={<ToteutusView />} />
           </Route>
         </Route>
       </Routes>
