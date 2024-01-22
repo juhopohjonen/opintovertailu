@@ -1,4 +1,4 @@
-import { LinearProgress, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, LinearProgress, Typography } from "@mui/material"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -44,12 +44,25 @@ const ToteutusView = () => {
 
             {
                 toteutus.metadata.opetus && toteutus.metadata.opetus.lisatiedot ? 
-                    toteutus.metadata.opetus.lisatiedot.map(tieto => <OptionalTextContent title={tieto.otsikko.nimi.fi} text={tieto.teksti.fi} />) : null
+                    toteutus.metadata.opetus.lisatiedot.map(tieto => <AccordionTextContent title={tieto.otsikko.nimi.fi} text={tieto.teksti.fi} />) : null
             }
+
+            <Box sx={{ mb: 5 }}></Box>
 
         </>
     )
 }
+
+const AccordionTextContent = ({ title, text }) => (
+    <Accordion>
+        <AccordionSummary>
+            <Typography variant='h5'>{title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+            <OptionalTextContent text={text} />
+        </AccordionDetails>
+    </Accordion>
+)
 
 const OptionalTextContent = ({ title, text }) => {
     

@@ -9,6 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Menu, MenuItem } from '@mui/material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -54,9 +55,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
   const [searchBarValue, setBarValue] = React.useState('')
+  const [anchorEl, setAnchorEl] = React.useState(null)
   const [chosenSearchQuery, setChosenSearchQuery] = React.useState(null)
 
   const navigate = useNavigate()
+  const openMenu = (e) => setAnchorEl(e.currentTarget)
 
   React.useEffect(() => {
     if (chosenSearchQuery) {
@@ -82,9 +85,39 @@ export default function SearchAppBar() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={openMenu}
           >
             <MenuIcon />
           </IconButton>
+          <Menu
+            sx={{ mt: '45px' }}
+            id='menu'
+            enchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left'
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left'
+            }}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+          >
+            <MenuItemComponent
+              title='Yliopisto'
+              to='/'
+            />
+            <MenuItemComponent
+              title='Ammattikoulu'
+              to='/?tab=ammattikoulu'
+            />
+            <MenuItemComponent
+              title='Ammattikorkea'
+              to='/?tab=amk'
+            />
+          </Menu>
           <Typography
             variant="h6"
             noWrap
@@ -112,3 +145,9 @@ export default function SearchAppBar() {
     </Box>
   );
 }
+
+const MenuItemComponent = ({ title, to }) => (
+  <MenuItem component={Link} to={to}>
+    <Typography textAlign='center'>{title}</Typography>
+  </MenuItem>
+)
