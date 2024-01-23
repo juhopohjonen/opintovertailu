@@ -133,11 +133,9 @@ const SearchForm = ({ educationType }) => {
 
     return (
         <>
-            <Tooltip placement="right" title={`Valitse satunnainen ${educationType}-opinto tältä sivulta`} >
-                <IconButton onClick={navToRandomEducation} sx={{ ml: 1 }} aria-label="Arvo satunnainen opinto">
-                    <CasinoOutlinedIcon />
-                </IconButton>
-            </Tooltip>
+            <Button startIcon={<CasinoOutlinedIcon />} variant="outlined" color="secondary" onClick={navToRandomEducation} sx={{ ml: 1 }} aria-label="Arvo satunnainen opinto">
+                Satunnainen opinto
+            </Button>
 
             <SearchResults hits={results.hits} />  
             <Stack spacing={2}>
@@ -184,6 +182,10 @@ const Result = ({ result }) => {
     )
 }
 
+
+// TODO: SelectOrder component for selecting order from API
+
+{/*
 const SelectOrder = ({ chosen, setChosen, sxRelay }) => {
     return (
         <FormControl fullWidth sx={sxRelay}>
@@ -200,6 +202,7 @@ const SelectOrder = ({ chosen, setChosen, sxRelay }) => {
         </FormControl>
     )
 }
+*/}
 
 
 export default Search

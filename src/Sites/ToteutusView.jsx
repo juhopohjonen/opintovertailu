@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { EducationHeader } from "./EducationView"
 import SeoEnchanger from "../Components/SeoEnchanger"
+import { parseNbsp } from "../utils"
 
 const API_URL = 'https://opintopolku.fi/konfo-backend/external/toteutus'
 
@@ -45,7 +46,7 @@ const ToteutusView = () => {
                 education={toteutus}
             />
 
-            <Button sx={{ mb: 2, ml: 0 }} variant="contained" color="secondary" component={Link} rel="noreferrer" target="_blank" to={`${IN_OP_URL}/${id}`}>Näytä opintopolussa</Button>
+            <Button sx={{ mb: 2, ml: 0 }} variant="outlined" color="secondary" component={Link} rel="noreferrer" target="_blank" to={`${IN_OP_URL}/${id}`}>Näytä opintopolussa</Button>
 
             {
                 toteutus.metadata.kuvaus ? <OptionalTextContent title="Kuvaus" text={toteutus.metadata.kuvaus.fi} /> : null
@@ -75,7 +76,7 @@ const AccordionTextContent = ({ title, text }) => (
 
 const OptionalTextContent = ({ title, text }) => {
     
-    const removeHTMLTags = (str) => str.replace(/(<([^>]+)>)/gi, "");
+    const removeHTMLTags = (str) => str.replace(/(<([^>]+)>)/gi, " ");
 
     
     if (!title && !text) {
@@ -89,7 +90,7 @@ const OptionalTextContent = ({ title, text }) => {
             }
 
             {
-                text ? <Typography color="text.secondary" paragraph>{removeHTMLTags(text)}</Typography> : null
+                text ? <Typography color="text.secondary" paragraph>{parseNbsp(removeHTMLTags(text))}</Typography> : null
             }
         </>
     )
