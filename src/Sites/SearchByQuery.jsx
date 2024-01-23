@@ -47,15 +47,15 @@ const AvailableEducations = () => {
         return <p>Ei tuloksia valitulle hakusanalle.</p>
     }
 
-    const pageChange = () => {
+    const pageChange = (e, value) => {
         if (hakusana) {
             setSearchParams({
                 hakusana: hakusana,
-                page: page+1
+                page: value
             })
         } else {
             setSearchParams({
-                page: page+1
+                page: value
             })
         }
     }
