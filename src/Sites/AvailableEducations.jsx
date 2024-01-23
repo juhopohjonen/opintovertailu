@@ -4,6 +4,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { Navigate, useLocation, useSearchParams } from "react-router-dom"
 import { SearchResults, canBeConvertedToNum } from "../Components/Search"
+import SeoEnchanger from "../Components/SeoEnchanger"
 
 const API_URI = 'https://opintopolku.fi/konfo-backend/external/search/toteutukset-koulutuksittain'
 
@@ -53,6 +54,7 @@ const AvailableEducations = () => {
 
     return (
         <>
+            <SeoEnchanger title="Haku" />
             <Typography variant="h3">
                 Tulokset hakusanalle "{hakusana}"
             </Typography>

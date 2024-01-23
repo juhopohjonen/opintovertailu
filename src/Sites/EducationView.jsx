@@ -1,8 +1,9 @@
 import { ExpandMore, SchoolRounded } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, CardMedia, LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, CardMedia, LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Tooltip, Typography } from "@mui/material"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
+import SeoEnchanger from "../Components/SeoEnchanger"
 
 const API_URI = "https://opintopolku.fi/konfo-backend/external/koulutus/"
 
@@ -37,6 +38,11 @@ const EducationView = () => {
 
     return (
         <>
+            <SeoEnchanger
+                title={education.nimi.fi}
+                desc={`Opinnon ${education.nimi.fi} ja monta muuta löydät Opintovertailusta.`}
+            />
+
             <Typography variant='h4' component='h1'>
                 {education.nimi.fi}
             </Typography>
@@ -119,6 +125,9 @@ const TypeOfEducationList = ({ typeList }) => {
 
  
 const SchoolList = ({ education, headerComp }) => {
+
+    const OP_SCHOOL_BASE = 'https://opintopolku.fi/konfo/fi/oppilaitos'
+
     const { tarjoajat } = education
 
     return (
@@ -128,15 +137,19 @@ const SchoolList = ({ education, headerComp }) => {
             }
             {tarjoajat.map(oppilaitos => (
                 <ListItem key={oppilaitos.nimi.fi}>
-                    <ListItemButton sx={{ ml: -2 }}>
-                        <ListItemIcon>
-                            <SchoolRounded />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={oppilaitos.nimi.fi}
-                            secondary={oppilaitos.paikkakunta.nimi.fi}
-                        />
-                    </ListItemButton>
+
+                    <Tooltip placement="right" title="Tämä linkki avautuu opintopolussa.">
+                        <ListItemButton sx={{ ml: -2 }} component={Link} to={`${OP_SCHOOL_BASE}/${oppilaitos.oid}`} target="_blank noref" rel="noreferrer">
+                            <ListItemIcon>
+                                <SchoolRounded />
+                            </ListItemIcon>
+
+                            <ListItemText
+                                primary={oppilaitos.nimi.fi}
+                                secondary={oppilaitos.paikkakunta.nimi.fi}
+                            />
+                        </ListItemButton>
+                    </Tooltip>
 
                 </ListItem>
             ))}

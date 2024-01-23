@@ -7,9 +7,11 @@ import EducationView from './Sites/EducationView.jsx'
 import SchoolView from './Sites/SchoolView.jsx'
 import AvailableEducations from './Sites/AvailableEducations.jsx'
 import ToteutusView from './Sites/ToteutusView.jsx'
+import SeoEnchanger from './Components/SeoEnchanger.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <SeoEnchanger />
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>

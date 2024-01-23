@@ -92,7 +92,7 @@ export default function SearchAppBar() {
           <Menu
             sx={{ mt: '45px' }}
             id='menu'
-            enchorEl={anchorEl}
+            anchorEl={anchorEl}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'left'
@@ -104,6 +104,7 @@ export default function SearchAppBar() {
             }}
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
+            onClick={() => setAnchorEl(null)}
           >
             <MenuItemComponent
               title='Yliopisto'

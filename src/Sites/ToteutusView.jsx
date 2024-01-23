@@ -1,13 +1,16 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, LinearProgress, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, LinearProgress, Typography } from "@mui/material"
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { EducationHeader } from "./EducationView"
+import SeoEnchanger from "../Components/SeoEnchanger"
 
 const API_URL = 'https://opintopolku.fi/konfo-backend/external/toteutus'
 
 const ToteutusView = () => {
     const [toteutus, setToteutus] = useState(null)
+
+    const IN_OP_URL = 'https://opintopolku.fi/konfo/fi/toteutus'
 
     const { id } = useParams()
 
@@ -30,6 +33,10 @@ const ToteutusView = () => {
 
     return (
         <>
+            <SeoEnchanger
+                title={toteutus.nimi.fi}
+                desc={toteutus && toteutus.metadata && toteutus.metadata.kuvaus ? toteutus.metadata.kuvaus : null}
+            />
             <Typography gutterBottom variant="h4" component='h1'>
                 {toteutus.nimi.fi}
             </Typography>
@@ -37,6 +44,8 @@ const ToteutusView = () => {
             <EducationHeader
                 education={toteutus}
             />
+
+            <Button sx={{ mb: 2, ml: 0 }} variant="contained" color="secondary" component={Link} rel="noreferrer" target="_blank" to={`${IN_OP_URL}/${id}`}>Näytä opintopolussa</Button>
 
             {
                 toteutus.metadata.kuvaus ? <OptionalTextContent title="Kuvaus" text={toteutus.metadata.kuvaus.fi} /> : null

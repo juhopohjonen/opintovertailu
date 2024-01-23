@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Icon, InputLabel, LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Pagination, Paper, Select, Stack, Tab, Tabs, TextField, Typography } from "@mui/material"
+import { Box, Button, FormControl, Icon, IconButton, InputLabel, LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Pagination, Paper, Select, Stack, Tab, Tabs, TextField, Tooltip, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 
 // experimental libraries
@@ -7,7 +7,11 @@ import TabContext from "@mui/lab/TabContext"
 import TabList from "@mui/lab/TabList"
 import TabPanel from "@mui/lab/TabPanel"
 import axios from "axios"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, Navigate, useSearchParams } from "react-router-dom"
+
+const resultsPerPage = 20
+
+import CasinoOutlinedIcon from '@mui/icons-material/CasinoOutlined';
 
 
 const API_URI = 'https://opintopolku.fi/konfo-backend/external/search/toteutukset-koulutuksittain'
@@ -65,6 +69,7 @@ const SearchForm = ({ educationType }) => {
 
     const [results, setResults] = useState(null)
     const [sParams, setSParams] = useSearchParams()
+    const [naviTarget, setNaviTarget] = useState(null) 
 
     const page = sParams.get('sivu') && canBeConvertedToNum(sParams.get('sivu'))
         ? canBeConvertedToNum(sParams.get('sivu'))
@@ -97,27 +102,49 @@ const SearchForm = ({ educationType }) => {
             params: {
                 koulutustyyppi: educationType,
                 page,
-                order: order
+                order: order,
+                size: resultsPerPage
             }
         })
             .then(res => setResults(res.data))
             .catch(err => console.error('err!', err))
     }, [sParams])
 
-
-
-
-
     if (!results) {
         return <LinearProgress />
     }
 
+    const totalHits = results.total
+    console.log(results.hits.length)
+    const pageCount = Math.ceil(totalHits / resultsPerPage)
+
+    const navToRandomEducation = () => {
+        const max = results.hits.length
+
+        const indexOfRandom = Math.floor(Math.random() * (max + 1))
+        console.log('random index', indexOfRandom)
+
+        const randomEdu = results.hits[indexOfRandom]
+
+        console.log(randomEdu)
+
+        return setNaviTarget(`/opinnot/${randomEdu.oid}`)
+    }
+
     return (
         <>
+            <Tooltip placement="right" title={`Valitse satunnainen ${educationType}-opinto tältä sivulta`} >
+                <IconButton onClick={navToRandomEducation} sx={{ ml: 1 }} aria-label="Arvo satunnainen opinto">
+                    <CasinoOutlinedIcon />
+                </IconButton>
+            </Tooltip>
+
             <SearchResults hits={results.hits} />  
             <Stack spacing={2}>
-                <Pagination count={10} onChange={pageChange} page={page} />
+                <Pagination count={pageCount} onChange={pageChange} page={page} />
             </Stack>
+
+            {naviTarget ? <Navigate to={naviTarget} replace={false} /> : null}
         </>
     )
 }
@@ -129,13 +156,13 @@ const SearchResults = ({ hits }) => {
 
     return (
         <List>
-            {hits.map(result => <Result result={result} />)}
+            {hits.map((result, i) => <Result key={result.nimi.fi + i.toString()} result={result} />)}
         </List>
     )
 }
 
 const Result = ({ result }) => {
-    
+
     const getStudyPointsStr = () => {
         if (result.opintojenLaajuusNumero && result.opintojenLaajuusyksikko.nimi.fi) {
             return `${result.opintojenLaajuusNumero} ${result.opintojenLaajuusyksikko.nimi.fi}`
@@ -149,7 +176,7 @@ const Result = ({ result }) => {
             <ListItemButton>
                 <ListItemText
                     sx={{ color: 'text.primary' }}
-                    primary={result.nimi.fi}
+                    primary={result.nimi.fi || result.nimi.sv || result.nimi.en || 'Ei nimeä'}
                     secondary={getStudyPointsStr()}
                 />
             </ListItemButton>
