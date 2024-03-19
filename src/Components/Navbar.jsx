@@ -8,8 +8,9 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, MenuItem } from '@mui/material';
+import ContrastIcon from '@mui/icons-material/Contrast';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -124,10 +125,12 @@ export default function SearchAppBar() {
             noWrap
             component={Link}
             to='/'
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, color: 'text.primary', textDecoration: 'none' }}
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, color: 'inherit', textDecoration: 'none' }}
           >
             Opintovertailu
           </Typography>
+
+
           <form onSubmit={submitForm}>
             <Search>
                 <SearchIconWrapper>

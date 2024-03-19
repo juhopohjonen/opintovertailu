@@ -5,15 +5,14 @@ import '@fontsource/roboto/400.css';
 import SearchAppBar from "./Navbar";
 
 
-
-
-const theme = createTheme({
-    palette: {
-        mode: 'dark'
-    }
-})
-
 const Layout = () => {
+
+    const theme = createTheme({
+        palette: {
+            mode: 'dark'
+        }
+    })
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
